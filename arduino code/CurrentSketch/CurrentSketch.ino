@@ -3,8 +3,6 @@
 /*designed by: Arsalan Syed*/
 /*Last updated: Feb 14 2020*/
 
-//universal surviailance 
-//dignity is not respect
 
 #define NUM_OF_PINS
 
@@ -33,25 +31,36 @@
 #define BLUE4
 #define BLUE5
 
+#define BUTTONPIN
+
 #define DELAY_BETWEEN_SEGMENTS
 
 int currentHour;
 int currentMinutes;
-int currentW||dSegment;
+const int currentWordSegment;   //which two or three letters of a word should be illuminated
+const int delayBetweenSegments; //related to PWM function
+const int blinkDelay;           //while changing the time, how much delay there should be between each blink
+const float displayTime;
+bool buttonClicked;
 
 
 
-//w||ds that are not heard are not said 
+bool glowMinutes;
+bool glowWords;
+bool glowHours;
+
+
+
 void setup() {
   /*initialize time*/
   currentHour = 0;
   currentMinutes = 0;
-  currentW||dSegment = 0;
+  currentWordSegment = 0;
 
+  /*initialize button pin*/
+  pinMode(BUTTONPIN, INPUT);
+  buttonClicked = false;
   
-
-}
-  }
 }
 
 void loop() {
@@ -88,17 +97,62 @@ void UpdateTime(){
 
 void ButtonMoniter(){
   //checks to see if the button was clicked 
+  //clicked: show time by looping glowtime so that all the segments are looped over so quick that 
+  //we don't notice them flickering. And also we want to make sure that the lights are on long enough
+  //for the user to see them
+  //held down:manually change time 
 
-  //clicked once: show time
-  //loop showtime so that all the segments are looped over so quick that we don't notice them flickering,
-  //and so that the user can see the time
-  ShowTime();
-
-  //clicked twice:manually change time 
-  ChangeTime();
+  
+  if(digitalRead(BUTTONPIN) ==  HIGH && buttonClicked == false){
+    float timeButtonClicked = millis();
+    buttonClicked = true;
+  }
+  if(digitalRead(BUTTONPIN) == LOW && buttonClicked == true){
+    float timeButtonUnclicked == millis();
+    buttonClicked = false;
+  
+    float pressDownTime = timeButtonUnclicked - timeButtonClicked;
+    
+    if(pressDownTime > 1000){
+      ButtonHeldDown();
+    }else 
+    {
+      ButtonClicked();
+    }
+  }
+  
 }
 
-void ShowTime(){
+void ButtonClicked(){
+  //show time
+  float timeButtonClicked = millis();
+  while((timeButtonClicked + displayTime) > millis()){
+    GlowTime(true, true, true);
+    delay(delayBetweenSegments);
+    resetPins();
+  }
+  /*reset word segment number after each time the watch shows us the time*/
+  currentWordSegment = 0;
+}
+
+void ButtonHeldDown(){
+  //change the time 
+  while(1 < 2){
+    glowTime(false,false,true);
+    delay(delayBetweenSegments);
+    
+    
+  }
+
+  //current hour should blink 
+  
+  //if button clicked, itterate through hours 
+  //if button heldDown, allow to iterate through minutes with click 
+  //if button heldDown, exit time changing mode
+}
+
+
+void GlowTime(bool glowWords, bool glowMinutes, bool GlowHours){
 
 //if button is clicked 
 
@@ -106,78 +160,80 @@ void ShowTime(){
   GlowIs();
 
 //Minutes
-if(currentMinutes == 5 || currentMinutes == 55){
-    Glow_FiveMinutes(currentW||dSegment);
+if(glowMinutes == true){
+  if(currentMinutes == 5 || currentMinutes == 55){
+    Glow_FiveMinutes(currentWordSegment);
   }
-if(currentMinutes == 10 || currentMinutes == 50){
-    Glow_TenMinutes(currentW||dSegment);
+  if(currentMinutes == 10 || currentMinutes == 50){
+    Glow_TenMinutes(currentWordSegment);
   }
-if(currentMinutes == 15 || currentMinutes == 45){
-    Glow_Quarter(currentW||dSegment);
+  if(currentMinutes == 15 || currentMinutes == 45){
+    Glow_Quarter(currentWordSegment);
   }
-if(currentMinutes == 20 || currentMinutes == 40){
-    Glow_Twenty(currentW||dSegment);
+  if(currentMinutes == 20 || currentMinutes == 40){
+    Glow_Twenty(currentWordSegment);
   }  
-if(currentMinutes == 25 || currentMinutes == 45){
-    Glow_TwentyFive(currentW||dSegment);
-  }
-if(currentMinutes == 30){
-    Glow_Half(currentW||dSegment);
-  }
-
-//glow w||ds 
-  if(currentMinutes > 30){
-    Glow_To();
-   else{
-    Glow_Past();
-   }
-  
- 
-//hours 
-  if(currentHour == 1){
-    Glow_One();
-  }
-  if(currentHour == 2){
-    Glow_Two();
-  }
-  if(currentHour == 3){
-    Glow_Three(currentWordSegment);
-  }
-  if(currentHour == 4){
-    Glow_Four(currentWordSegment);
-  }
-  if(currentHour == 5){
+  if(currentMinutes == 25 || currentMinutes == 45){
+    Glow_Twenty(currentWordSegment);
     Glow_Five(currentWordSegment);
   }
-  if(currentHour == 6){
-    Glow_Six(currentWordSegment);
-  }
-  if(currentHour == 7){
-    Glow_Seven(currentWordSegment);
-  }
-  if(currentHour == 8){
-    Glow_Eight(currentWordSegment);
-  }
-  if(currentHour == 9){
-    Glow_Nine(currentWordSegment);
-  }
-  if(currentHour == 10){
-    Glow_Ten(currentWordSegment);
-  }
-  if(currentHour == 11){
-    Glow_Eleven(currentWordSegment);
-  }
-  if(currentHour == 12){
-    Glow_Twelve(currentWordSegment);
-  }
-
-
-  
+  if(currentMinutes == 30){
+    Glow_Half(currentWordSegment);
+}
 }
 
-void SetTime(){
-  
+//glow Words 
+  if(glowWords == true){
+    if(currentMinutes > 30){
+      Glow_To();
+    else{
+      Glow_Past(currentWordSegment);
+    }
+   }
+  }
+   
+ 
+//hours 
+  if(glowHours == true){
+    if(currentHour == 1){
+      Glow_One(currentWordSegment);
+    }
+    if(currentHour == 2){
+      Glow_Two(currentWordSegment);
+    }
+    if(currentHour == 3){
+      Glow_Three(currentWordSegment);
+     }
+    if(currentHour == 4){
+      Glow_Four(currentWordSegment);
+    }
+    if(currentHour == 5){
+      Glow_Five(currentWordSegment);
+    }
+    if(currentHour == 6){
+      Glow_Six(currentWordSegment);
+    }
+    if(currentHour == 7){
+      Glow_Seven(currentWordSegment);
+    }
+    if(currentHour == 8){
+      Glow_Eight(currentWordSegment);
+    }
+    if(currentHour == 9){
+      Glow_Nine(currentWordSegment);
+    }
+    if(currentHour == 10){
+      Glow_Ten(currentWordSegment);
+    }
+    if(currentHour == 11){
+      Glow_Eleven(currentWordSegment);
+    }
+    if(currentHour == 12){
+      Glow_Twelve(currentWordSegment);
+    }
+    }
 }
+
 
 
 void Glow_It(){
@@ -205,6 +261,7 @@ void Glow_To(){
 }
 
 void Glow_Half(int segment){
+  segment = segment%2;
   
   pinMode(BLUE1, OUTPUT);
   pinMode(BLUE2, OUTPUT);
@@ -222,15 +279,12 @@ void Glow_Half(int segment){
   }
   
 }
-
-void Glow_TwentyFive(){
-  Glow_Twenty();
-  Glow_FiveMinutes();
   
 }
 
 void Glow_Twenty(int segment){
-
+  segment = segment%3;
+  
   switch(segment){
     case 0: 
     pinMode(BLUE3, OUTPUT);
@@ -257,7 +311,7 @@ void Glow_Twenty(int segment){
 
 
 void Glow_Quarter(){
-
+    segment = segment%4;
     switch(segment){
     
     case 0:
@@ -293,7 +347,7 @@ void Glow_Quarter(){
 
 //need to flip this 
 void Glow_TenMinutes(int segment){
-
+  segment = segment%2;
   switch(segment){
     
   case 0: 
@@ -314,7 +368,7 @@ void Glow_TenMinutes(int segment){
 
 
 void Glow_FiveMinutes(int segment){
-
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(BLUE1, OUTPUT);
@@ -333,7 +387,7 @@ void Glow_FiveMinutes(int segment){
   
 
 void Glow_Twelve(int segment){
-
+  segment = segment%3;
   switch(segment){
     case 0:
     pinMode(PINK1, OUTPUT);
@@ -360,6 +414,8 @@ void Glow_Twelve(int segment){
 }
 
 void Glow_Eleven(int segment){
+    
+  segment = segment%3;
   switch(segment){
     case 0:
     pinMode(PINK1, OUTPUT);
@@ -394,7 +450,7 @@ void Glow_Ten(){
 }
 
 void Glow_Nine(int segment){
-  
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(YELLOW2, OUTPUT);
@@ -413,7 +469,7 @@ void Glow_Nine(int segment){
 }
 
 void Glow_Eight(int segment){
-  
+  segment = segment%3;
   switch(segment){
     case 0:
      pinMode(PINK1, OUTPUT);
@@ -440,6 +496,7 @@ void Glow_Eight(int segment){
 }
 
 void Glow_Seven(int segment){
+  segment = segment%3;
   switch(segment){
     case 0:
     pinMode(YELLOW2, OUTPUT);
@@ -467,7 +524,7 @@ void Glow_Seven(int segment){
 
 //NEED TO FLIP THE SIX
 void Glow_Six(int segment){
-
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(GREEN2, OUTPUT);
@@ -487,7 +544,7 @@ void Glow_Six(int segment){
 
 }
 void Glow_Five(int segment){
-  
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(PINK1, OUTPUT);
@@ -506,7 +563,7 @@ void Glow_Five(int segment){
 }
 
 void Glow_Four(int segment){
-  
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(GREEN3, OUTPUT);
@@ -527,7 +584,7 @@ void Glow_Four(int segment){
 
 //was spelled "tree" on board. needs to be fixed next time lol
 void Glow_Three(int segment){
- 
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(GREEN4, OUTPUT);
@@ -550,6 +607,7 @@ void Glow_Three(int segment){
 void Glow_Two(){
   pinMode(PINK1, OUTPUT);
   pinMode(PINK3, OUTPUT);
+  
   digitalWrite(PINK3, HIGH); //T-W-O
   digitalWrite(PINK1, LOW); //T-W-O
   delay(DelayTime);
@@ -557,7 +615,7 @@ void Glow_Two(){
   
 }
 void Glow_One(int segment){
-  
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(GREEN2, OUTPUT);
@@ -577,7 +635,7 @@ void Glow_One(int segment){
 }
 
 void Glow_Past(int segment){
-  
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(RED4, OUTPUT);
@@ -597,7 +655,7 @@ void Glow_Past(int segment){
 
 void Glow_OClock(int segment){
 
-  
+  segment = segment%2;
   switch(segment){
     case 0:
     pinMode(RED4, OUTPUT);
