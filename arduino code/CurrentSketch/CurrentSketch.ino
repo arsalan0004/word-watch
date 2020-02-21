@@ -37,7 +37,7 @@
 
 int currentHour;
 int currentMinutes;
-const int currentWordSegment;   //which two or three letters of a word should be illuminated
+static int currentWordSegment;   //which two or three letters of a word should be illuminated
 const int delayBetweenSegments; //related to PWM function
 const int blinkDelay;           //while changing the time, how much delay there should be between each blink
 const float displayTime;
@@ -48,6 +48,8 @@ bool buttonClicked;
 bool glowMinutes;
 bool glowWords;
 bool glowHours;
+
+bool recentTickUp;
 
 
 
@@ -60,6 +62,7 @@ void setup() {
   /*initialize button pin*/
   pinMode(BUTTONPIN, INPUT);
   buttonClicked = false;
+  recentTickUp = false;
   
 }
 
@@ -78,11 +81,11 @@ void loop() {
 void UpdateTime(){
 
   /*300000 milliseconds == 5 minutes*/
-  if ((abs((millis()%300000 - 50) < 100) and (not(recentTickUp)){
+  if ((abs((millis()%300000 < 50) and (not(recentTickUp)){
     if((currentMinutes == 55)){
-      currentHour = ((currentHour + 1)%12);
+      currentHour = (currentHour + 1)%12;
       currentMinutes = 0;
-      //turn on o'clock
+      
      else{
       currentMinutes +=5; 
      }
@@ -90,7 +93,7 @@ void UpdateTime(){
     recentTickUp = true;
     tickUpTime = millis();
    }
-  if(recentTickUp and ((millis() - tickUpTime) > 200)){
+  if((recentTickUp) and ((millis() - tickUpTime) > 200)){
     recentTickUp = false;
     }
   }
@@ -129,18 +132,40 @@ void ButtonClicked(){
   while((timeButtonClicked + displayTime) > millis()){
     GlowTime(true, true, true);
     delay(delayBetweenSegments);
+    currentWordSegment += 1;
     resetPins();
   }
   /*reset word segment number after each time the watch shows us the time*/
   currentWordSegment = 0;
 }
 
+//current point
 void ButtonHeldDown(){
-  //change the time 
-  while(1 < 2){
+  
+  bool buttonClicked = false;
+
+  /*change minutes*/
+  while(buttonClicked == false){
     glowTime(false,false,true);
     delay(delayBetweenSegments);
+    currentWordSegment += 1;
+    resetPins();
+
+    if(digitalRead(BUTTONPIN) == HIGH && buttonClicked == false){
+      float buttonClickTime = millis();
+      buttonClicked == true;
+    if(digitalRead(BUTTONPIN) == LOW and buttonClicked == true){
+      float buttonUnclickedTime = millis();
+      if(buttonUnclickedTime - buttonClickTime > 1000){
+        
+      }
+      else{
+        currentMinutes += 1;
+      }
+    }
     
+    }
+  whi
     
   }
 
@@ -188,6 +213,9 @@ if(glowMinutes == true){
       Glow_To();
     else{
       Glow_Past(currentWordSegment);
+    }
+    if(currentMinutes == 0){
+      Glow_OClock(currentWordSegment);
     }
    }
   }
