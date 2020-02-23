@@ -141,11 +141,25 @@ void ButtonClicked(){
 
 //current point
 void ButtonHeldDown(){
+
   
+  /*
+  array of pointers 
+  each time the button is clicked, we iterate through this array 
+  when we reach the end of the array, we set @exit to true, and exit this loop
+  */
+  int *ArrayOfTimePointers[2]{
+    {*MinutesPointer},{*hoursPointer}
+  }
+  minutesPointer = &currentMinutes;
+  hoursPinter = &currentHour;
+
+  bool @exit = false;
   bool buttonClicked = false;
+  int *currentTime = &currentMinutes;
 
   /*change minutes*/
-  while(buttonClicked == false){
+  while(@exit == false){
     glowTime(false,false,true);
     delay(delayBetweenSegments);
     currentWordSegment += 1;
@@ -160,7 +174,7 @@ void ButtonHeldDown(){
         
       }
       else{
-        currentMinutes += 1;
+        *currentTime += 1;
       }
     }
     
