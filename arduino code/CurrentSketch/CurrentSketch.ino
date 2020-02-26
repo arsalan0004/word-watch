@@ -132,35 +132,23 @@ void ButtonClicked(){
   while((timeButtonClicked + displayTime) > millis()){
     GlowTime(true, true, true);
     delay(delayBetweenSegments);
-    currentWordSegment += 1;
+    currentWordSegment += 5;
     resetPins();
   }
   /*reset word segment number after each time the watch shows us the time*/
   currentWordSegment = 0;
 }
 
-//current point
+//need to make the lights blink when changing the time - should be added in the next iteration
 void ButtonHeldDown(){
 
-  
-  /*
-  array of pointers 
-  each time the button is clicked, we iterate through this array 
-  when we reach the end of the array, we set @exit to true, and exit this loop
-  */
-  int *ArrayOfTimePointers[2]{
-    {*MinutesPointer},{*hoursPointer}
-  }
-  minutesPointer = &currentMinutes;
-  hoursPinter = &currentHour;
-
+ 
   bool @exit = false;
   bool buttonClicked = false;
-  int *currentTime = &currentMinutes;
 
   /*change minutes*/
   while(@exit == false){
-    glowTime(false,false,true);
+    glowTime(true,true,true);
     delay(delayBetweenSegments);
     currentWordSegment += 1;
     resetPins();
@@ -168,18 +156,22 @@ void ButtonHeldDown(){
     if(digitalRead(BUTTONPIN) == HIGH && buttonClicked == false){
       float buttonClickTime = millis();
       buttonClicked == true;
+    }
     if(digitalRead(BUTTONPIN) == LOW and buttonClicked == true){
       float buttonUnclickedTime = millis();
       if(buttonUnclickedTime - buttonClickTime > 1000){
-        
+        @exit = true;
+        return;
       }
       else{
-        *currentTime += 1;
+        currentMinutes += 1;
+        if(currentMinutes == 60){
+          currentMinutes =0;
+          currentHour = currentHour%12; 
+        }
       }
     }
     
-    }
-  whi
     
   }
 
