@@ -1,0 +1,165 @@
+void check_all_LEDS(){
+ 
+   //it_is();
+   int i =0;
+   delay(DEBUGGING_DELAY);
+   resetRed();
+
+   delay(DEBUGGING_DELAY);
+   resetRed();
+   
+   while (i<DEBUGGING_DELAY) {
+    half();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+   
+  while (i<DEBUGGING_DELAY) {
+    twenty();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+   
+  while (i<DEBUGGING_DELAY) {
+    fiveMinutes();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+
+  while (i<DEBUGGING_DELAY) {
+    quarter();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+
+ while (i<DEBUGGING_DELAY) {
+    tenMinutes();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+
+   while (i<DEBUGGING_DELAY) {
+    to();
+    i +=1;
+   }
+   i =0;
+   resetRed();
+
+   while (i<DEBUGGING_DELAY) {
+    past();
+    i +=1;
+   }
+   i =0;
+   resetRed();
+
+  while (i<DEBUGGING_DELAY) {
+    twelve();
+    i +=1;
+   }
+   i =0;
+   resetGreen();
+
+  while (i<DEBUGGING_DELAY) {
+    one();
+    i +=1;
+   }
+   i =0;
+   resetGreen();
+
+
+   while (i<DEBUGGING_DELAY) {
+    six();
+    i +=1;
+   }
+   i =0;
+   resetGreen();
+
+   while (i<DEBUGGING_DELAY) {
+    three();
+    i +=1;
+   }
+   i =0;
+   resetGreen();
+   resetPink();
+
+   
+   while (i<DEBUGGING_DELAY) {
+    four();
+    i +=1;
+   }
+   i =0;
+   resetGreen();
+
+
+  while (i<DEBUGGING_DELAY) {
+    five_hour();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+
+ while (i<DEBUGGING_DELAY) {
+    two();
+    i +=1;
+   }
+   i =0;
+   resetPink();
+
+
+while (i<DEBUGGING_DELAY) {
+    eight;
+    i +=1;
+   }
+   i =0;
+   resetPink();
+
+   while (i<DEBUGGING_DELAY) {
+    eleven();
+    i +=1;
+   }
+   i =0;
+   resetPink();
+   
+  i = 0; 
+  while (i<DEBUGGING_DELAY) {
+    //seven();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+
+
+   while (i<DEBUGGING_DELAY) {
+    nine();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+
+  while (i<DEBUGGING_DELAY) {
+    tenHour();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+
+while (i<DEBUGGING_DELAY) {
+    //Oclock();
+    i +=1;
+   }
+   i =0;
+   resetMCP23008(0b00000000);
+  
+   
+   
+
+   
+  
+   
+  
+}
