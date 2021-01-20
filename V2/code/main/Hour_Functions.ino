@@ -15,7 +15,7 @@ All the LEDs associated with spelling out hours are controlled by the MCP23008 I
 
 #define MCP23008_ADDRESS 0x20
 #define MCP23008_GPIO_REG 0x09
-#define MCDP23008_IODIR_REG 0x00
+#define MCP23008_IODIR_REG 0x00
 
 #define HOUR1 0b10000000 //pin 7
 #define HOUR2 0b01000000 //pin 6
@@ -27,13 +27,13 @@ All the LEDs associated with spelling out hours are controlled by the MCP23008 I
 #define HOUR8 0b00000001 //pin 0
 
 
-void MCP23008_setPinAsOutput(byte pin1 byte pin2){
+void MCP23008_setPinAsOutput(byte pin1, byte pin2){
   //sets pins specified with a '1' as output, and those specified with a '0' as input 
   //example: byte pins = 0b00000001 sets pins 1-7 to input, and pin 0 as output
 
  
   
-  pins = ~(pin1 | pin2);
+  byte pins = ~(pin1 | pin2);
   //inverts the pins because the MCP23008 harware actually requires that output pins be specified by '0'
   //and input pins specified by  '1'
   //our method uses the inverse because it allows us to be consistant with our methods to 
@@ -61,10 +61,12 @@ void MCP23008_Reset(){
 
 void MCP23008_set(byte input){
   //sets the MCP23008 pins specificed by the byte inputted.
-  //example: input byte: 00000001 sets pin 1, and clears pins 8-2.
-
+  //Because this function 'touches' every bit in the GPIO register, you don't always need to manually set pins low.
+  //example: input byte: 00000001 sets pin 0, and clears pins 7-1.
+  //         input byte: 00000010 sets pin 0 low (along with pins 7-2) but sets pin 1
+  
   Wire.beginTransmission(MCP23008_ADDRESS);
-  Wire.write(MCDP23008_GPIO_REG);              //access address for GPIO access
+  Wire.write(MCP23008_GPIO_REG);              //access address for GPIO access
   Wire.write(input);                           //setting voltage. 1 = high, 0 = low 
   Wire.endTransmission();
   
@@ -72,8 +74,15 @@ void MCP23008_set(byte input){
 
 
 void one_Hour(int i){
-  //involves hour 1 and hour 5 
-  MCP23008_set(HOUR1);
+  //involves pins "hour 1" and "hour 5" 
+  MCP23008_setPinAsOutput(HOUR1, HOUR5);
+  switch(i){
+    case 0:
+    MCP23008_set(HOUR1); //glows 'O' and 'N'
+    break;
 
-  
+    case 1:
+    MCP23008_set(HOUR5); // glow 'E' and 'ONE_EXTRA' 
+    break; 
+  }
 }
