@@ -9,6 +9,8 @@ This file is part of the Word-Watch V2 project.
 This file contains all the functions which are called to glow the letters associated with hours.
 All the LEDs associated with spelling out hours are controlled by the MCP23008 I/O expander, which is controlled through I2C. 
 
+
+//mistake on schematic. Hour 2 trace to E and N2 of 'Nine' needs to be cut. trace from hour3 needs to be rerouted here
 */
 
 #include "Wire.h"
@@ -53,6 +55,8 @@ void MCP23008_setPinAsOutput(byte pin1, byte pin2){
   
 }
 
+
+
 void MCP23008_Reset(){
   //sets all the MCP23008 pins low
   MCP23008_set(0);
@@ -75,14 +79,209 @@ void MCP23008_set(byte input){
 
 void one_Hour(int i){
   //involves pins "hour 1" and "hour 5" 
-  MCP23008_setPinAsOutput(HOUR1, HOUR5);
+
+  i = i%2;
   switch(i){
     case 0:
-    MCP23008_set(HOUR1); //glows 'O' and 'N'
-    break;
+     MCP23008_set(HOUR1); //glows 'O' and 'N'
+     break;
 
     case 1:
-    MCP23008_set(HOUR5); // glow 'E' and 'ONE_EXTRA' 
-    break; 
+     MCP23008_set(HOUR5); // glow 'E' and 'ONE_EXTRA' 
+     break; 
   }
+}
+
+void two_hour(int i){
+  //involves pins 'hour 3' and 'hour 6'
+  i = i%2;
+  switch(i){
+    case 0:
+     MCP23008_set(HOUR3); //glows 'w' and 'two_extra'
+     break;
+
+    case 1:
+     MCP23008_set(HOUR6); //glows 'T' and 'o'
+     break;
+
+  }
+}
+
+void three_hour(int i){
+  //involves pins 'hour 3' and 'hour 5' and 'hour 4'
+  i = i %3;
+  switch(i){
+    case 0:
+      MCP23008_setPinAsOutput(HOUR3, HOUR5);
+      MCP23008_set(HOUR3); //glows 'E' and 2ndE' 
+      break;
+    case 1:
+      MCP23008_set(HOUR5); //glows 'R' and H'
+      break;
+    case 2:
+      MCP23008_setPinAsOutput(HOUR3, HOUR4);
+      MCP23008_set(HOUR3); //glows 'T' and 'Three_extra'
+      break;
+ }
+}
+
+void four_hour(int i){
+  //involves pins 'hour 1' and 'hour 6'
+  
+  MCP23008_setPinAsOutput(HOUR1, HOUR5);
+  i = i %2;
+  switch(i){
+    case 0:
+      MCP23008_set(HOUR1); //glows 'O' and R' 
+      break;
+    case 1:
+      MCP23008_set(HOUR6); //glows 'F' and 'U' 
+      break;
+ }
+}
+
+void five_hour(int i){
+  //involves pins 'hour 2' and 'hour 6'
+  
+  MCP23008_setPinAsOutput(HOUR2, HOUR6);
+  i = i %2;
+  switch(i){
+    case 0:
+      MCP23008_set(HOUR2); //glows 'I' and E' 
+      break;
+    case 1:
+      MCP23008_set(HOUR6); //glows 'F' and 'V' 
+      break;
+ }
+}
+
+void six_hour(int i){
+  //involves pins 'hour 2' and 'hour 5'
+  MCP23008_setPinAsOutput(HOUR2, HOUR5);
+  i = i %2;
+  switch(i){
+    case 0:
+      MCP23008_set(HOUR2); //glows 'X' and six_extra' 
+      break;
+    case 1:
+      MCP23008_set(HOUR5); //glows 'S' and 'I' 
+      break;
+ }
+}
+
+void seven_hour(int i){
+  //involves pins 'hour 1' and 'hour 2' and 'hour 8' 
+  i = i%3;
+
+  switch(i){
+    case 0:
+      MCP23008_setPinAsOutput(HOUR1, HOUR8);
+      MCP23008_set(HOUR1); //glows 'S' and 'seven_extra'
+      break;
+      
+    case 1:
+      MCP23008_set(HOUR8); //glows 'V' and 'E'
+      break;
+      
+    case 2:
+      MCP23008_setPinAsOutput(HOUR2, HOUR8);
+      MCP23008_set(HOUR8); //glows 'N' and '2ndE'
+      break;
+  }
+  
+}
+
+void eight_hour(int i){
+  //involves pins 'hour 1' and and 'hour 2' and 'hour 7'
+  i = i%3;
+  switch(i){
+    case 0:
+      MCP23008_setPinAsOutput(HOUR1, HOUR7);
+      MCP23008_set(HOUR1); //glows 'E' and 'H'
+      break;
+      
+    case 1:
+      MCP23008_set(HOUR7); //glows 'G' and 'I'
+      break;
+      
+    case 2:
+      MCP23008_setPinAsOutput(HOUR2, HOUR7);
+      MCP23008_set(HOUR8); //glows 'T' and 'Eight_Extra'
+      break;
+  }
+  
+}
+
+void nine_hour(int i){
+  //involves pins 'hour 2' and 'hour 3' and 'hour 8'
+
+  i = i%2;
+  switch(i){
+    case 0:
+      MCP23008_setPinAsOutput(HOUR2, HOUR8);
+      MCP23008_set(HOUR2); //glows 'N' and 'I'
+      break;
+      
+    case 1:
+      MCP23008_setPinAsOutput(HOUR3, HOUR8);
+      MCP23008_set(HOUR3); //glows '2nd N' and 'E'
+      break;
+      
+  }
+}
+
+void ten_hour(int i){
+  //involves pins 'hour 1' and 'hour 4' 
+
+  MCP23008_setPinAsOutput(HOUR1, HOUR4);
+  
+  i = i%2;
+  switch(i){
+    case 0:
+      MCP23008_set(HOUR1); //glows 'T' and 'E'
+      break;
+      
+    case 1:
+      MCP23008_set(HOUR4); //glows 'N' and 'Ten_Extra'
+      break;
+}
+
+void eleven_hour(int i){
+  //involves pins 'hour 2' and 'hour 3' and 'hour 7'
+  i = i%3;
+  switch(i){
+    case 0:
+      MCP23008_setPinAsOutput(HOUR2, HOUR7);
+      MCP23008_set(HOUR2); //glows 'E' and 'L'
+      break;
+      
+    case 1:
+      MCP23008_setPinAsOutput(HOUR3, HOUR7);
+      MCP23008_set(HOUR3); //glows 'N' and 'third E'
+      break;
+
+    case 2:
+      MCP23008_set(HOUR7); //glows '2nd E' and 'V'
+      break;
+  
+}
+
+void twelve_hour(int i){
+  //involves pins 'hour 2' and 'hour 3' and 'hour 4'
+
+  i = i%3;
+  switch(i){
+    case 0:
+      MCP23008_setPinAsOutput(HOUR2, HOUR4);
+      MCP23008_set(HOUR2); //glows 'E' and 'L'
+      break;
+      
+    case 1:
+      MCP23008_set(HOUR4); //glows 'E' and 'T'
+      break;
+
+    case 2:
+      MCP23008_setPinAsOutput(HOUR3, HOUR4);
+      MCP23008_set(HOUR4); //glows '2nd E' and 'V'
+      break;
 }
