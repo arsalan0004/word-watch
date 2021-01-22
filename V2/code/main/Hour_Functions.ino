@@ -244,6 +244,7 @@ void ten_hour(int i){
     case 1:
       MCP23008_set(HOUR4); //glows 'N' and 'Ten_Extra'
       break;
+  }
 }
 
 void eleven_hour(int i){
@@ -264,6 +265,7 @@ void eleven_hour(int i){
       MCP23008_set(HOUR7); //glows '2nd E' and 'V'
       break;
   
+ }
 }
 
 void twelve_hour(int i){
@@ -284,4 +286,5 @@ void twelve_hour(int i){
       MCP23008_setPinAsOutput(HOUR3, HOUR4);
       MCP23008_set(HOUR4); //glows '2nd E' and 'V'
       break;
+ }
 }
