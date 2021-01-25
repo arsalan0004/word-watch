@@ -1,3 +1,17 @@
+/*
+Title: Minute_Functions
+Creator: Arsalan Syed
+libraries required: Wire.c 
+Last Update: Jan 22th, 2021, by Arsalan Syed
+
+Description:
+This file is part of the Word-Watch V2 project.
+This file contains all the functions which are called to glow the letters associated with Minutes.
+All the LEDs associated with spelling out minutes are controlled by the ATMEGA328p-au. 
+
+*/
+
+
 #define MIN1 17//PC3
 #define MIN2 0//PD0
 #define MIN3 1//PD1

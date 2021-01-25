@@ -2,7 +2,7 @@
 Title: Hour_Functions
 Creator: Arsalan Syed
 libraries required: Wire.c 
-Last Update: Jan 19th, 2021, by Arsalan Syed
+Last Update: Jan 21st, 2021, by Arsalan Syed
 
 Description:
 This file is part of the Word-Watch V2 project.
@@ -56,13 +56,6 @@ void MCP23008_setPinAsOutput(byte pin1, byte pin2){
 }
 
 
-
-void MCP23008_Reset(){
-  //sets all the MCP23008 pins low
-  MCP23008_set(0);
-}
-
-
 void MCP23008_set(byte input){
   //sets the MCP23008 pins specificed by the byte inputted.
   //Because this function 'touches' every bit in the GPIO register, you don't always need to manually set pins low.
@@ -74,6 +67,11 @@ void MCP23008_set(byte input){
   Wire.write(input);                           //setting voltage. 1 = high, 0 = low 
   Wire.endTransmission();
   
+}
+
+void set_HourPins_INPUT(){
+  //sets all pins to INPUT
+  MCP23008_setPinAsOutput(0,0);
 }
 
 
